@@ -5,7 +5,7 @@
 2. [iou](iou.py)
 3. [nms](nms.py)
 4. [multiple classes nms](nms_multiclass.py)
-5. 
+5. [KMeans](kmeans.py)
 
 
 
