@@ -36,6 +36,7 @@ def info_nce_loss(query, positive_key, negative_keys, temperature=0.07):
 
     return loss
 
+
 # 示例用法
 batch_size = 8
 embedding_dim = 128

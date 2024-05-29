@@ -36,6 +36,7 @@ def clip_loss(image_features, text_features, image_projection, text_projection, 
     loss = (loss_image + loss_text) / 2.0
     return loss
 
+
 if __name__ == "__main__":
     # 示例用法
     batch_size = 8

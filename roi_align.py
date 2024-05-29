@@ -58,7 +58,6 @@ def roi_align(feature_map, rois, output_size):
 
     return output_features
 
-
 if __name__ == "__main__":
     features = torch.randn(2, 8, 10, 10)
     rois = torch.tensor([[
