@@ -31,13 +31,16 @@ def roi_align(feature_map, rois, output_size):
             grid_h = torch.clamp(grid_h, 0, feature_map.size(2) - 1)
             grid_w = torch.clamp(grid_w, 0, feature_map.size(3) - 1)
 
-            grid_h_floor = torch.floor(grid_h).to(torch.int64)
-            grid_w_floor = torch.floor(grid_w).to(torch.int64)
-            grid_h_ceil = torch.ceil(grid_h).to(torch.int64)
-            grid_w_ceil = torch.ceil(grid_w).to(torch.int64)
+            grid_h_expanded = grid_h[:, None].repeat(1, len(grid_w)).flatten()
+            grid_w_expanded = grid_w[None, :].repeat(len(grid_h), 1).flatten()
 
-            h_weight = grid_h - grid_h_floor.float()
-            w_weight = grid_w - grid_w_floor.float()
+            grid_h_floor = torch.floor(grid_h_expanded).to(torch.int64)
+            grid_w_floor = torch.floor(grid_w_expanded).to(torch.int64)
+            grid_h_ceil = torch.ceil(grid_h_expanded).to(torch.int64)
+            grid_w_ceil = torch.ceil(grid_w_expanded).to(torch.int64)
+
+            h_weight = grid_h_expanded - grid_h_floor.float()
+            w_weight = grid_w_expanded - grid_w_floor.float()
 
             top_left_features = feature_map[b, :, grid_h_floor, grid_w_floor]
             top_right_features = feature_map[b, :, grid_h_floor, grid_w_ceil]
@@ -51,8 +54,7 @@ def roi_align(feature_map, rois, output_size):
 
             interpolated_features = top_left_features + top_right_features + bottom_left_features + bottom_right_features
 
-            import pdb; pdb.set_trace()
-            output_features[b, k] = interpolated_features
+            output_features[b, k] = interpolated_features.reshape(C, *output_size)
 
     return output_features
 
