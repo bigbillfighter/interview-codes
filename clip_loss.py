@@ -22,7 +22,7 @@ def clip_loss(image_features, text_features, image_projection, text_projection, 
 
     # 计算相似性矩阵
     logits_per_image = torch.matmul(image_features, text_features.T) / temperature
-    logits_per_text = logits_per_image.t()
+    logits_per_text = torch.matmul(text_features, image_features.T) / temperature
 
     # 创建标签
     batch_size = image_features.size(0)
