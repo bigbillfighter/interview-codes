@@ -41,7 +41,7 @@ def nms(bboxes: torch.Tensor, threshold=0.7):
 
         orders = orders[1:]
         if orders.shape[0] > 0:
-            left_boxes = boxes[orders]
+            left_boxes = boxes[orders] 
             ious = iou(max_score_box, left_boxes)
             orders = orders[ious[0] < threshold]
     
