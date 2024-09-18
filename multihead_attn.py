@@ -6,16 +6,19 @@ from torch import nn
 import torch.nn.functional as F
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, input_dim, num_heads, bias=False):
+    def __init__(self, input_dim, num_heads, bias=False, dropout=0.1):
         super().__init__()
         self.dim = input_dim
         self.num_heads = num_heads
         self.split_dim = input_dim // num_heads
         self.scale = 1.0 / math.sqrt(self.split_dim)
 
+        self.drop_out = nn.Dropout(dropout)
+
         self.linear_query = nn.Linear(input_dim, input_dim, bias=bias)
         self.linear_key = nn.Linear(input_dim, input_dim, bias=bias)
         self.linear_value = nn.Linear(input_dim, input_dim, bias=bias)
+        self.linear_output = nn.Linear(input_dim, input_dim, bias=bias)
     
     def forward(self, query, key, value, mask=None):
         '''
@@ -39,10 +42,10 @@ class MultiHeadAttention(nn.Module):
 
         attn = F.softmax(attn, dim=-1)
 
-        out = attn @ value
+        out = self.drop_out(attn) @ value
         out = out.permute(0, 2, 1, 3).reshape(B, L, -1)
 
-        return out
+        return self.linear_output(out)
 
 
 if __name__ == '__main__':

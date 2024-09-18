@@ -46,7 +46,6 @@ def nms(bboxes: torch.Tensor, threshold=0.7):
             orders = orders[ious[0] < threshold]
     
     keep = torch.tensor(keep, dtype=torch.int64)
-
     return keep
 
 if __name__ == "__main__":

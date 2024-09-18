@@ -6,8 +6,8 @@ def clip_loss(image_features, text_features, image_projection, text_projection, 
     计算 CLIP 的对比损失
 
     参数：
-    - image_features: 图像的特征嵌入，大小为 [batch_size, embedding_dim]
-    - text_features: 文本的特征嵌入，大小为 [batch_size, embedding_dim]
+    - image_features: 图像的特征嵌入，大小为 [batch_size, embedding_image]
+    - text_features: 文本的特征嵌入，大小为 [batch_size, embedding_text]
     - temperature: 温度参数，用于缩放相似度
 
     返回值：
@@ -25,6 +25,7 @@ def clip_loss(image_features, text_features, image_projection, text_projection, 
     logits_per_text = torch.matmul(text_features, image_features.T) / temperature
 
     # 创建标签
+    assert image_features.size(0) == text_features.size(0)
     batch_size = image_features.size(0)
     labels = torch.arange(batch_size, dtype=torch.long)
 
